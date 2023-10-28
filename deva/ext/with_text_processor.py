@@ -105,6 +105,8 @@ def process_frame_with_text(deva: DEVAInferenceCore,
                                    prompts=prompts)
 
     elif cfg['temporal_setting'] == 'online':
+        import time
+        start_time = time.time()
         if ti % cfg['detection_every'] == 0:
             # incorporate new detections
             mask, segments_info = make_segmentation_with_text(cfg, image_np, gd_model, sam_model,
@@ -114,9 +116,12 @@ def process_frame_with_text(deva: DEVAInferenceCore,
         else:
             # Run the model on this frame
             prob = deva.step(image, None, None)
+        print("Runtime ", time.time() - start_time)
         result_saver.save_mask(prob,
                                frame_name,
                                need_resize=need_resize,
                                shape=(h, w),
                                image_np=image_np,
                                prompts=prompts)
+
+    return prob # Return mask
