@@ -127,7 +127,7 @@ def process_frame_with_text(deva: DEVAInferenceCore,
                                prompts=prompts)
         
     # Most likely class if mask not given
-    if mask is None:
-        mask = torch.argmax(prob, dim=0)
+    # if mask is None:
+    #     mask = torch.argmax(prob, dim=0)
 
-    return prob, mask # Return mask
+    return prob # Return mask
