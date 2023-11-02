@@ -53,6 +53,7 @@ def process_frame_with_text(deva: DEVAInferenceCore,
         'shape': [h, w],
     })
 
+    mask=None
     if cfg['temporal_setting'] == 'semionline':
         if ti + cfg['num_voting_frames'] > deva.next_voting_frame:
             mask, segments_info = make_segmentation_with_text(cfg, image_np, gd_model, sam_model,
@@ -117,11 +118,16 @@ def process_frame_with_text(deva: DEVAInferenceCore,
             # Run the model on this frame
             prob = deva.step(image, None, None)
         print("Runtime ", time.time() - start_time)
+        
         result_saver.save_mask(prob,
                                frame_name,
                                need_resize=need_resize,
                                shape=(h, w),
                                image_np=image_np,
                                prompts=prompts)
+        
+    # Most likely class if mask not given
+    if mask is None:
+        mask = torch.argmax(prob, dim=0)
 
-    return prob # Return mask
+    return prob, mask # Return mask

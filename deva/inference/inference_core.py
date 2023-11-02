@@ -39,6 +39,7 @@ class DEVAInferenceCore:
             self.image_feature_store = image_feature_store
 
         self.last_mask = None
+        self.padded_last_mask = None
 
         # for online/semi-online processing
         self.frame_buffer = []
